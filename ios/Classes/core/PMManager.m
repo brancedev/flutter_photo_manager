@@ -29,7 +29,6 @@
   if (self) {
     __isAuth = NO;
     cacheContainer = [PMCacheContainer new];
-    cachingManager = [PHCachingImageManager new];
   }
 
   return self;
@@ -1309,11 +1308,16 @@
   options.resizeMode = options.resizeMode;
   options.deliveryMode = option.deliveryMode;
 
+  if (!cachingManager) {
+    cachingManager = [PHCachingImageManager new];
+  }
   [cachingManager startCachingImagesForAssets:array targetSize:[option makeSize] contentMode:option.contentMode options:options];
 }
 
 - (void)cancelCacheRequests {
-  [cachingManager stopCachingImagesForAllAssets];
+  if (cachingManager) {
+    [cachingManager stopCachingImagesForAllAssets];
+  }
 }
 
 - (void)notifyProgress:(PMProgressHandler *)handler progress:(double)progress state:(PMProgressState)state {
